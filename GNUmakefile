@@ -1,7 +1,6 @@
 .DEFAULT_GOAL := build
 CXX       ?= c++
-TESTSHELL ?=/bin/sh
-CRAMOPTS  ?= --shell=$(TESTSHELL)
+CRAMOPTS  ?= --shell=zsh
 CRAM_ROOT ?= cram
 CRAM_PATH ?= $(CRAM_ROOT)
 
@@ -17,7 +16,7 @@ BMANDIR    = $(BROOTDIR)/man/man1
 
 DIRS = $(BLIBDIR) $(BBINDIR)
 
-CMDS     = $(patsubst src/xdgenv/%.sh,%,$(shell echo src/xdgenv/*))
+CMDS     = $(patsubst src/xdgenv/%.zsh,%,$(shell echo src/xdgenv/*))
 MANS     = $(patsubst Documentation/%.rst,%.1,$(shell echo Documentation/xdgenv*))
 
 BUILD_DEPS  =
@@ -36,11 +35,11 @@ CHECK_PATH = $(PWD)/$(BROOTDIR)/fakeroot/usr/local/bin:/bin:/usr/bin:/usr/local/
 .PHONY: build
 build: $(BUILD_DEPS)
 
-$(BBINDIR)/xdgenv-%: src/xdgenv/%.sh
+$(BBINDIR)/xdgenv-%: src/xdgenv/%.zsh
 
 	install -m755 -D $< $@
 
-$(BBINDIR)/xdgenv: src/xdgenv.sh
+$(BBINDIR)/xdgenv: src/xdgenv.zsh
 
 	install -m755 -D $< $@
 

@@ -16,8 +16,8 @@ BMANDIR    = $(BROOTDIR)/man/man1
 
 DIRS = $(BLIBDIR) $(BBINDIR)
 
-CMDS     = $(patsubst src/xdgenv/%.zsh,%,$(shell echo src/xdgenv/*))
-MANS     = $(patsubst Documentation/%.rst,%.1,$(shell echo Documentation/xdgenv*))
+CMDS     = $(patsubst src/xdgenv/%.zsh,%,$(wildcard src/xdgenv/*))
+MANS     = $(patsubst Documentation/%.rst,%.1,$(wildcard Documentation/xdgenv*))
 
 BUILD_DEPS  =
 BUILD_DEPS += $(BMANDIR)

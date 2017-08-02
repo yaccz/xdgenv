@@ -2,7 +2,6 @@
 # vim: filetype=zsh
 
 setopt no_unset
-setopt pipe_fail
 setopt warn_create_global
 
 function fatal {

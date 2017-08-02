@@ -20,10 +20,10 @@ setup application variables
 ===========================
 
   $ . xdgenv-exec FOO foo -- env | grep FOO
-  FOO_DATA_HOME=/home/yac/.local/share/foo
-  FOO_CONFIG_HOME=/home/yac/.config/foo
+  FOO_DATA_HOME=/home/*/.local/share/foo (glob)
+  FOO_CONFIG_HOME=/home/*/.config/foo (glob)
   FOO_CONFIG_DIRS=/etc/xdg/foo
-  FOO_CACHE_HOME=/home/yac/.cache/foo
+  FOO_CACHE_HOME=/home/*/.cache/foo (glob)
   FOO_DATA_DIRS=/usr/local/share/foo:/usr/share/foo
 
 parent environment takes precedence

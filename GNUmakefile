@@ -30,7 +30,7 @@ INSTALL_DEPS += $(BINDIR)/xdgenv
 INSTALL_DEPS += $(addprefix $(BINDIR)/xdgenv-,$(CMDS))
 INSTALL_DEPS += $(addprefix $(MANDIR)/,$(MANS))
 
-CHECK_PATH = $(CURDIR)/$(BROOTDIR)/fakeroot/usr/local/bin:/bin:/usr/bin:/usr/local/bin
+CHECK_PATH = $(CURDIR)/$(BROOTDIR)/fakeroot/usr/local/bin:$(PATH)
 
 .PHONY: build
 build: $(BUILD_DEPS)

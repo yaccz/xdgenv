@@ -9,22 +9,22 @@ check the variables we'll look for are not already set
 setup XDG variables
 ===================
 
-  $ xdgenv exec env | grep XDG
-  XDG_DATA_HOME=/home/*/.local/share (glob)
+  $ xdgenv exec env | grep XDG | sort
+  XDG_CACHE_HOME=/home/*/.cache (glob)
+  XDG_CONFIG_DIRS=/etc/xdg
   XDG_CONFIG_HOME=/home/*/.config (glob)
   XDG_DATA_DIRS=/usr/local/share:/usr/share
-  XDG_CONFIG_DIRS=/etc/xdg
-  XDG_CACHE_HOME=/home/*/.cache (glob)
+  XDG_DATA_HOME=/home/*/.local/share (glob)
 
 setup application variables
 ===========================
 
-  $ . xdgenv-exec FOO foo -- env | grep FOO
-  FOO_DATA_HOME=/home/*/.local/share/foo (glob)
-  FOO_CONFIG_HOME=/home/*/.config/foo (glob)
-  FOO_CONFIG_DIRS=/etc/xdg/foo
+  $ . xdgenv-exec FOO foo -- env | grep FOO | sort
   FOO_CACHE_HOME=/home/*/.cache/foo (glob)
+  FOO_CONFIG_DIRS=/etc/xdg/foo
+  FOO_CONFIG_HOME=/home/*/.config/foo (glob)
   FOO_DATA_DIRS=/usr/local/share/foo:/usr/share/foo
+  FOO_DATA_HOME=/home/*/.local/share/foo (glob)
 
 parent environment takes precedence
 ===================================
@@ -32,9 +32,9 @@ parent environment takes precedence
   $ export XDG_CONFIG_HOME=/t1
   $ export FOO_CONFIG_HOME=/t2
 
-  $ xdgenv-exec FOO foo -- env | grep -P '(XDG|FOO)_CONFIG_HOME'
-  XDG_CONFIG_HOME=/t1
+  $ xdgenv-exec FOO foo -- env | grep -P '(XDG|FOO)_CONFIG_HOME' | sort
   FOO_CONFIG_HOME=/t2
+  XDG_CONFIG_HOME=/t1
 
 missing command
 ===============

@@ -54,6 +54,11 @@ $(BMANDIR)/%.1: Documentation/%.rst
 .PHONY: install
 install: $(INSTALL_DEPS)
 
+.PHONY: install-home
+install-home:
+
+	$(MAKE) install PREFIX=$(HOME)/.local
+
 $(BINDIR)/%: $(BBINDIR)/%
 
 	install -m755 -D $< $@

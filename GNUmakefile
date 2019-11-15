@@ -33,6 +33,11 @@ install_deps += $(addprefix $(mandir)/,$(mans))
 
 check_path = $(CURDIR)/$(brootdir)/fakeroot/usr/local/bin:$(PATH)
 
+distdir = $(brootdir)/sdist
+name := xdgenv
+version := 0.1.0
+vname := $(name)_$(version)
+
 .PHONY: build
 build: $(build_deps)
 
@@ -77,4 +82,34 @@ check: build
 
 	mkdir -p $(brootdir)/fakeroot
 	DESTDIR=$(brootdir)/fakeroot $(MAKE) install
-	env -i PATH=$(check_path) cram $(cramopts) $(cram_path)
+	env -i PATH=$(check_path) $(MAKE) sys-check
+
+.PHONY: sys-check
+sys-check:
+
+	cram $(cramopts) $(cram_path)
+
+.PHONY: sdist
+sdist:
+
+	mkdir -p $(distdir)
+	git archive --format=tar.gz HEAD --prefix $(vname)/ -o $(distdir)/$(vname).tar.gz
+
+.PHONY: deb
+deb: clean sdist
+
+	mkdir -p $(brootdir)/pkg/debian
+
+	cp -a $(distdir)/$(vname).tar.gz ./$(brootdir)/pkg/debian/$(vname).orig.tar.gz
+	cd ./$(brootdir)/pkg/debian && tar -xf $(vname).orig.tar.gz
+
+	cp -a pkg/debian $(brootdir)/pkg/debian/$(vname)
+
+	cd $(brootdir)/pkg/debian/$(vname) && debuild -us -uc
+	test -f $(brootdir)/pkg/debian/$(vname)-0_all.deb
+
+.PHONY: deb-check
+deb-check:
+
+	docker build --build-arg=VNAME="$(vname)" -t $(name):$(version) -f pkg/debian/Dockerfile .
+	docker run $(name):$(version)

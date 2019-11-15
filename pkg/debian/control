@@ -1,0 +1,14 @@
+Source: xdgenv
+Maintainer: Jan Matejka <jan@matejka.ninja>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 9)
+
+Package: xdgenv
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: TBD
+ TBD
+
+

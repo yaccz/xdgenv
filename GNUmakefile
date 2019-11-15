@@ -1,79 +1,80 @@
 .DEFAULT_GOAL := build
 CXX       ?= c++
-CRAMOPTS  ?= --shell=zsh
-CRAM_ROOT ?= cram
-CRAM_PATH ?= $(CRAM_ROOT)
 
-PREFIX   ?= /usr/local
-LIBDIR   ?= $(DESTDIR)$(PREFIX)/lib
-BINDIR   ?= $(DESTDIR)$(PREFIX)/bin
-MANDIR   ?= $(DESTDIR)$(PREFIX)/man/man1
+cramopts  ?= --shell=zsh
+cram_root ?= cram
+cram_path ?= $(cram_root)
 
-BROOTDIR   = _build
-BLIBDIR    = $(BROOTDIR)/lib
-BBINDIR    = $(BROOTDIR)/bin
-BMANDIR    = $(BROOTDIR)/man/man1
+prefix   ?= /usr/local
+libdir   ?= $(DESTDIR)$(prefix)/lib
+bindir   ?= $(DESTDIR)$(prefix)/bin
+mandir   ?= $(DESTDIR)$(prefix)/man/man1
 
-DIRS = $(BLIBDIR) $(BBINDIR)
+brootdir   = _build
+blibdir    = $(brootdir)/lib
+bbindir    = $(brootdir)/bin
+bmandir    = $(brootdir)/man/man1
 
-CMDS     = $(patsubst src/xdgenv/%.zsh,%,$(wildcard src/xdgenv/*))
-MANS     = $(patsubst Documentation/%.rst,%.1,$(wildcard Documentation/xdgenv*))
+dirs = $(blibdir) $(bbindir)
 
-BUILD_DEPS  =
-BUILD_DEPS += $(BMANDIR)
-BUILD_DEPS += $(BBINDIR)/xdgenv
-BUILD_DEPS += $(addprefix $(BBINDIR)/xdgenv-,$(CMDS))
-BUILD_DEPS += $(addprefix $(BMANDIR)/,$(MANS))
+cmds     = $(patsubst src/xdgenv/%.zsh,%,$(wildcard src/xdgenv/*))
+mans     = $(patsubst Documentation/%.rst,%.1,$(wildcard Documentation/xdgenv*))
 
-INSTALL_DEPS += $(MANDIR)
-INSTALL_DEPS += $(BINDIR)/xdgenv
-INSTALL_DEPS += $(addprefix $(BINDIR)/xdgenv-,$(CMDS))
-INSTALL_DEPS += $(addprefix $(MANDIR)/,$(MANS))
+build_deps  =
+build_deps += $(bmandir)
+build_deps += $(bbindir)/xdgenv
+build_deps += $(addprefix $(bbindir)/xdgenv-,$(cmds))
+build_deps += $(addprefix $(bmandir)/,$(mans))
 
-CHECK_PATH = $(CURDIR)/$(BROOTDIR)/fakeroot/usr/local/bin:$(PATH)
+install_deps += $(mandir)
+install_deps += $(bindir)/xdgenv
+install_deps += $(addprefix $(bindir)/xdgenv-,$(cmds))
+install_deps += $(addprefix $(mandir)/,$(mans))
+
+check_path = $(CURDIR)/$(brootdir)/fakeroot/usr/local/bin:$(PATH)
 
 .PHONY: build
-build: $(BUILD_DEPS)
+build: $(build_deps)
 
-$(BBINDIR)/xdgenv-%: src/xdgenv/%.zsh
-
-	install -m755 -D $< $@
-
-$(BBINDIR)/xdgenv: src/xdgenv.zsh
+$(bbindir)/xdgenv-%: src/xdgenv/%.zsh
 
 	install -m755 -D $< $@
 
-$(BMANDIR):
+$(bbindir)/xdgenv: src/xdgenv.zsh
+
+	install -m755 -D $< $@
+
+$(bmandir):
 
 	install -d $@
 
-$(BMANDIR)/%.1: Documentation/%.rst
+$(bmandir)/%.1: Documentation/%.rst
 
 	rst2man $< $@
 
 .PHONY: install
-install: $(INSTALL_DEPS)
+install: $(install_deps)
 
-$(BINDIR)/%: $(BBINDIR)/%
+$(bindir)/%: $(bbindir)/%
 
 	install -m755 -D $< $@
 
-$(MANDIR):
+$(mandir):
 
 	install -d $@
 
-$(MANDIR)/%: $(BMANDIR)/%
+$(mandir)/%: $(bmandir)/%
 
 	install -m644 $< $@
 
 .PHONY: clean
 clean:
 
-	$(RM) -r $(BROOTDIR) $(CRAM_ROOT)/*.t.err
+	$(RM) -r $(brootdir) $(cram_root)/*.t.err
 
 .PHONY: check
 check: build
 
-	mkdir -p $(BROOTDIR)/fakeroot
-	DESTDIR=$(BROOTDIR)/fakeroot $(MAKE) install
-	env -i PATH=$(CHECK_PATH) cram $(CRAMOPTS) $(CRAM_PATH)
+	mkdir -p $(brootdir)/fakeroot
+	DESTDIR=$(brootdir)/fakeroot $(MAKE) install
+	env -i PATH=$(check_path) cram $(cramopts) $(cram_path)

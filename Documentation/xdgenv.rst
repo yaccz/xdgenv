@@ -66,7 +66,7 @@ Build:
 
 Tests:
 
-* ``cram <https://github.com/brodie/cram>``
+* ``dram <https://git.sr.ht/~rne/dram>``
 
 Runtime:
 
